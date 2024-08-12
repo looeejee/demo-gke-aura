@@ -10,9 +10,11 @@ COPY requirements.txt .
 # Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the current directory contents into the container at /app
-COPY templates .
-COPY app.py .
+# Copy the templates directory into /app/templates in the container
+COPY templates /app/templates
+
+# Copy the app.py file into /app in the container
+COPY app.py /app/
 
 # Expose port 80 for the Flask app
 EXPOSE 80
