@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-outbound-to-specific-ip
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 34.78.243.29/32
+    ports:
+    - protocol: TCP
+      port: 443  # or whichever port is necessary
+    - protocol: TCP
+      port: 7687

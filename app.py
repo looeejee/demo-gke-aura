@@ -15,7 +15,12 @@ NEO4J_USER = os.getenv('NEO4J_USER')
 NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD')
 
 # Initialize the Neo4j driver
-driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+try:
+    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+    driver.verify_connectivity()
+except Exception as e:
+    print(f"Failed to connect to Neo4j: {e}")
+    exit(1)
 
 @app.route('/')
 def index():
@@ -31,27 +36,7 @@ def create_nodes():
         return redirect(url_for('index'))
     except Exception as e:
         return str(e)
-
-@app.route('/update')
-def update_graph():
-    try:
-        # Fetch new data from an external URL
-        response = requests.get('https://example.com/new-data')  # Replace with actual URL
-        new_data = response.json()
-
-        with driver.session() as session:
-            for item in new_data:
-                session.run("""
-                    MATCH (n:Node {id: $id})
-                    SET n.property = $property
-                    RETURN n
-                """, id=item['id'], property=item['property'])
-
-        return redirect(url_for('index'))
-    except Exception as e:
-        return str(e)
-
-
+    
 @app.route('/cleanup', methods=['POST'])
 def cleanup_nodes():
     try:
@@ -63,3 +48,4 @@ def cleanup_nodes():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
+
