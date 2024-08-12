@@ -1,0 +1,29 @@
+key-file.json
+
+
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform plan files
+*.tfplan
+planfile.json
+
+# Terraform workspace directory
+.terraform/
+
+# Provider binary cache
+.terraform/providers/
+
+# Terraform environment files
+.terraform/environment
+
+# Terraform variable files
+*.tfvars
+*.tfvars.json
+
+# Terraform lock file
+.terraform.lock.hcl
+
+# Local environment files
+.env

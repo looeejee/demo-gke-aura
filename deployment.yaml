@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+  labels:
+    app: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: <your-registry>/my-flask-app:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: NEO4J_URI
+          valueFrom:
+            secretKeyRef:
+              name: auradb-secret
+              key: NEO4J_URI
+        - name: NEO4J_USER
+          valueFrom:
+            secretKeyRef:
+              name: auradb-secret
+              key: NEO4J_USER
+        - name: NEO4J_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: auradb-secret
+              key: NEO4J_PASSWORD
