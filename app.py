@@ -33,6 +33,7 @@ def create_nodes():
         with driver.session() as session:
             for i in range(num_nodes):
                 session.run("CREATE (n:Node {id: $id}) RETURN n", id=i)
+            session.close()
         return redirect(url_for('index'))
     except Exception as e:
         return str(e)
