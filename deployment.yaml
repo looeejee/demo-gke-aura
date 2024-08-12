@@ -17,6 +17,7 @@ spec:
       containers:
       - name: flask-app
         image: ghcr.io/lubrz/demo-gke-aura:main
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
