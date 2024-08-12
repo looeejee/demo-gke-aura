@@ -6,20 +6,18 @@
     <title>Flask App</title>
 </head>
 <body>
-    <h1>Flask App for AuraDB</h1>
+    <h1>Python App for AuraDB</h1>
     <p>This is a test!</p>
 
     <form action="/create" method="post">
-        <!--<label for="num_nodes">Number of nodes to create:</label>
-        <input type="number" id="num_nodes" name="num_nodes" min="1" required>
-        -->
         <button type="submit">Create Graph</button>
     </form>
 
-    {% if num_nodes %}
+    {% if num_nodes and num_relationships and time_taken %}
     <p>{{ num_nodes }} nodes created!</p>
+    <p>{{ num_relationships }} relationships created!</p>
+    <p>Time taken: {{ time_taken }} seconds</p>
     {% endif %}
-
 
     <form action="/cleanup" method="post">
         <button type="submit">Cleanup Database</button>
