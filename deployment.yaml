@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: <your-registry>/my-flask-app:latest
+        image: ghcr.io/lubrz/demo-gke-aura:main
         ports:
         - containerPort: 80
         env:
@@ -35,3 +35,18 @@ spec:
             secretKeyRef:
               name: auradb-secret
               key: NEO4J_PASSWORD
+      imagePullSecrets:
+      - name: my-registry-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-service
+spec:
+  selector:
+    app: flask-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
