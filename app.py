@@ -36,11 +36,15 @@ driver = get_neo4j_driver()
 def index():
     try:
         with driver.session() as session:
-            result = session.run("MATCH (n) RETURN count(n) AS num_nodes")
-            num_nodes = result.single()["num_nodes"]
-        return render_template('index.html', num_nodes=num_nodes)
+            node_result = session.run("MATCH (n) RETURN count(n) AS num_nodes")
+            num_nodes = node_result.single()["num_nodes"]
+            
+            relationship_result = session.run("MATCH ()-[r]->() RETURN count(r) AS num_relationships")
+            num_relationships = relationship_result.single()["num_relationships"]
+        
+        return render_template('index.html', num_nodes=num_nodes, num_relationships=num_relationships)
     except Exception as e:
-        logger.error(f"Failed to fetch node count: {e}")
+        logger.error(f"Failed to fetch graph data: {e}")
         return f"An error occurred: {str(e)}", 500
 
 @app.route('/create', methods=['POST'])
@@ -124,6 +128,8 @@ def create_nodes():
         
         end_time = time.time()  # End the timer
         time_taken = end_time - start_time
+
+        time_taken = round(time_taken, 2)
         
         # Pass the information to the index template
         return render_template('index.html', num_nodes=num_nodes, num_relationships=num_relationships, time_taken=time_taken)
@@ -137,6 +143,8 @@ def cleanup_nodes():
     try:
         with driver.session() as session:
             session.run("MATCH (n) DETACH DELETE n")
+        
+        # Redirect to the index page which will display updated counts
         return redirect(url_for('index'))
     except Exception as e:
         logger.error(f"An error occurred during cleanup: {e}")
