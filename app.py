@@ -29,7 +29,6 @@ def index():
 @app.route('/create', methods=['POST'])
 def create_nodes():
     try:
-        num_nodes = int(request.form.get('num_nodes', '0'))
         with driver.session() as session:
             
             session.run("""LOAD CSV WITH HEADERS
@@ -48,10 +47,10 @@ def create_nodes():
                             a.occupation = split(row.occupation,','),
                             a.education = a.education,
                             a.reason = a.reason, id=i)""")
-            
-        return redirect(url_for('index'))
+            num_nodes = session.run(" MATCH (n) RETURN count(n)")
+        return redirect(url_for('index'), num_nodes=num_nodes)
     except Exception as e:
-        return str(e)
+        return "An error occurred while creating nodes.", str(e)
     
 @app.route('/cleanup', methods=['POST'])
 def cleanup_nodes():

@@ -16,6 +16,11 @@
         <button type="submit">Create Graph</button>
     </form>
 
+    {% if num_nodes %}
+    <p>{{ num_nodes }} nodes created!</p>
+    {% endif %}
+
+
     <form action="/cleanup" method="post">
         <button type="submit">Cleanup Database</button>
     </form>
