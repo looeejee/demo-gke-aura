@@ -31,9 +31,24 @@ def create_nodes():
     try:
         num_nodes = int(request.form.get('num_nodes', '0'))
         with driver.session() as session:
-            for i in range(num_nodes):
-                session.run("CREATE (n:Node {id: $id}) RETURN n", id=i)
-            session.close()
+            
+            session.run("""LOAD CSV WITH HEADERS
+                        FROM 'https://raw.githubusercontent.com/looeejee/olympic-graph/main/data/athletes.csv' AS row
+                        MERGE (a:Athlete {code: row.code})
+                        SET
+                            a.name = row.name,
+                            a.gender = row.gender,
+                            a.height = toInteger(row.height),
+                            a.weight = toInteger(row.weight),
+                            a.birth_date = date(row.birth_date),
+                            a.birth_place = row.birth_place,
+                            a.birth_place = row.birth_place,
+                            a.nickname = row.nickname,
+                            a.hobbies= split(row.hobbies, ','),
+                            a.occupation = split(row.occupation,','),
+                            a.education = a.education,
+                            a.reason = a.reason, id=i)""")
+            
         return redirect(url_for('index'))
     except Exception as e:
         return str(e)
