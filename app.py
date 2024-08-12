@@ -44,7 +44,7 @@ def index():
         
         return render_template('index.html', num_nodes=num_nodes, num_relationships=num_relationships)
     except Exception as e:
-        logger.error(f"Failed to fetch graph data: {e}")
+        logger.error(f"Failed to render index.html: {e}")
         return f"An error occurred: {str(e)}", 500
 
 @app.route('/create', methods=['POST'])
