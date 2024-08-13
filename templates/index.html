@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Python App for AuraDB</h1>
-    <p>This is a test!</p>
+    <p>This is a demo project</p>
 
     <form action="/create" method="post">
         <button type="submit">Create Graph</button>
@@ -24,6 +24,21 @@
 
     {% if time_taken is not none %}
     <p>Time taken to create graph: {{ time_taken }} seconds</p>
+    {% endif %}
+
+    <form action="/search_athletes" method="post">
+        <label for="sport_name">Enter Sport Name:</label>
+        <input type="text" id="sport_name" name="sport_name" required>
+        <button type="submit">Search Athletes</button>
+    </form>
+
+    {% if athletes is not none %}
+    <h2>Athletes who won in {{ sport_name }}:</h2>
+    <ul>
+        {% for athlete in athletes %}
+        <li>{{ athlete }}</li>
+        {% endfor %}
+    </ul>
     {% endif %}
 </body>
 </html>

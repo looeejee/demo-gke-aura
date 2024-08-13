@@ -150,6 +150,36 @@ def cleanup_nodes():
         logger.error(f"An error occurred during cleanup: {e}")
         return str(e), 500
 
+@app.route('/search_athletes', methods=['POST'])
+def search_athletes():
+    sport_name = request.form.get('sport_name')
+    try:
+        with driver.session() as session:
+            # Run the queries to get athletes who won in place 1, 2, and 3 along with their positions and event names
+            query = """
+            MATCH (s:Sport {name: $name})<-[]-(e:Event)<-[:HAS_WON_IN_PLACE_1]-(a:Athlete)
+            RETURN a.name AS athlete, '1st' AS position, e.name AS event
+            UNION
+            MATCH (s:Sport {name: $name})<-[]-(e:Event)<-[:HAS_WON_IN_PLACE_2]-(a:Athlete)
+            RETURN a.name AS athlete, '2nd' AS position, e.name AS event
+            UNION
+            MATCH (s:Sport {name: $name})<-[]-(e:Event)<-[:HAS_WON_IN_PLACE_3]-(a:Athlete)
+            RETURN a.name AS athlete, '3rd' AS position, e.name AS event
+            """
+            result = session.run(query, name=sport_name)
+            athletes = [{
+                "name": record["athlete"],
+                "position": record["position"],
+                "event": record["event"]
+            } for record in result]
+        
+        # Render the index.html template with the athlete data
+        return render_template('index.html', athletes=athletes, sport_name=sport_name)
+    
+    except Exception as e:
+        logger.error(f"An error occurred during athlete search: {e}")
+        return f"An error occurred: {str(e)}", 500
+
 if __name__ == '__main__':
     try:
         app.run(host='0.0.0.0', port=5000, debug=True)
