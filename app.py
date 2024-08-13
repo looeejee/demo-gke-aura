@@ -182,6 +182,6 @@ def search_athletes():
 
 if __name__ == '__main__':
     try:
-        app.run(host='0.0.0.0', port=5000, debug=True)
+        app.run(host='0.0.0.0', port=5000, debug=False)
     except Exception as e:
         logger.error(f"Failed to start the server: {e}")
