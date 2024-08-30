@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: neodash
+  labels:
+    project: neodash
+spec:
+  containers:
+    - name: neodash
+      image: neo4jlabs/neodash:latest
+      ports:
+        - containerPort: 5005
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: neodash-svc
+spec:
+    type: LoadBalancer
+    ports:
+    - port: 5005
+      targetPort: 5005
+    selector:
+      project: neodash

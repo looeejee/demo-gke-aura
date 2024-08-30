@@ -8,6 +8,8 @@ resource "google_container_cluster" "primary" {
   name     = "demo-gke-aura"
   location = "europe-west1-b"  # You can choose a specific zone within the region
 
+  deletion_protection = false
+
   initial_node_count = 1
 
   node_config {
